@@ -21,6 +21,8 @@ short_description: 'RL environment for diagnosing ML training failures'
 For local development, copy `.env.example` to `.env` and fill your values.
 The `.env` file is gitignored and should never be committed.
 
+If a token was ever pasted in a terminal or remote URL, revoke it in Hugging Face settings and create a fresh token.
+
 ### Inference Entrypoint
 
 Run the mandatory root script:
@@ -48,3 +50,50 @@ It performs three fail-fast checks:
 1. Space URL responds 200 on POST /reset.
 2. Docker build succeeds.
 3. openenv validate succeeds.
+
+Validated command used for this project:
+
+```bash
+DOCKER_BUILD_TIMEOUT=1800 ./scripts/validate-submission.sh https://aarushgupta2735-ml-diagnostics.hf.space .
+```
+
+### Docker Permission Note (Linux)
+
+If Docker fails with permission denied on `/var/run/docker.sock`, refresh shell group context:
+
+```bash
+newgrp docker
+docker ps
+```
+
+### GitHub + Hugging Face Submission
+
+This hackathon requires both links:
+
+1. GitHub repository URL
+2. Hugging Face Space URL
+
+Recommended remote setup:
+
+```bash
+git remote set-url origin https://github.com/aarushgupta2735/ml-diagnostics.git
+git remote set-url hf https://huggingface.co/spaces/aarushgupta2735/ml_diagnostics
+git branch -M main
+git push -u origin main
+git push hf main
+```
+
+### If huggingface-cli Is Not Found
+
+Install Hugging Face Hub in your environment and log in from Python:
+
+```bash
+/home/aarush/miniconda3/envs/openenv_course/bin/python -m pip install -U huggingface_hub
+/home/aarush/miniconda3/envs/openenv_course/bin/python -c "from huggingface_hub import login; login()"
+```
+
+Then retry:
+
+```bash
+git push hf main
+```

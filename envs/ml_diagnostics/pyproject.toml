@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml-diagnostics-env"
+version = "1.0.0"
+description = "OpenEnv ML diagnostics environment"
+requires-python = ">=3.10"
+dependencies = [
+    "openenv-core>=0.2.0",
+    "uvicorn>=0.24.0",
+]
+
+[project.scripts]
+server = "server.app:main"

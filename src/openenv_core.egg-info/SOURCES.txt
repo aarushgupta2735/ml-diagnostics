@@ -1,4 +1,3 @@
-LICENSE
 README.md
 pyproject.toml
 src/openenv/__init__.py
@@ -76,4 +75,3 @@ src/openenv_core.egg-info/dependency_links.txt
 src/openenv_core.egg-info/entry_points.txt
 src/openenv_core.egg-info/requires.txt
 src/openenv_core.egg-info/top_level.txt
-tests/test_line_endings.py

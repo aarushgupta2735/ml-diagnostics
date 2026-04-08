@@ -80,7 +80,7 @@ git remote set-url origin https://github.com/aarushgupta2735/ml-diagnostics.git
 git remote set-url hf https://huggingface.co/spaces/aarushgupta2735/ml_diagnostics
 git branch -M main
 git push -u origin main
-git push hf main
+git push https://aarushgupta2735:YOUR_HF_TOKEN@huggingface.co/spaces/aarushgupta2735/ml_diagnostics main
 ```
 
 ### If huggingface-cli Is Not Found

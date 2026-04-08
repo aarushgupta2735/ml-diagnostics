@@ -1,0 +1,36 @@
+name: ml-diagnostics
+version: "1.0.0"
+description: >
+  An RL environment where an agent diagnoses ML training failures.
+  Tasks range from single hyperparameter issues to complex multi-failure scenarios.
+author: aarushgupta2735
+task_type: diagnostic_reasoning
+difficulty_levels:
+  - easy
+  - medium
+  - hard
+tasks:
+  - id: 1
+    name: Hyperparameter Diagnosis
+    difficulty: easy
+    max_steps: 5
+    description: Identify a single misconfigured hyperparameter from loss curves and config.
+  - id: 2
+    name: Overfitting Detection and Fix
+    difficulty: medium
+    max_steps: 7
+    description: Diagnose overfitting root causes and prescribe a prioritized fix plan.
+  - id: 3
+    name: Multi-Issue Training Failure
+    difficulty: hard
+    max_steps: 10
+    description: Identify multiple simultaneous training failures and prioritize fixes correctly.
+reward:
+  step_reward: true
+  partial_credit: true
+  penalizes_hallucination: true
+  final_score_range: [0.0, 1.0]
+action_types:
+  - request_data
+  - submit_diagnosis
+  - submit_fix

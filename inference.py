@@ -143,8 +143,14 @@ def get_model_action(client: Any, conversation: List[Dict[str, str]]) -> Dict[st
 def _build_sync_env():
     """Build and return a connected sync environment client."""
     if LOCAL_IMAGE_NAME:
-        async_client = asyncio.run(MLDiagnosticsEnv.from_docker_image(LOCAL_IMAGE_NAME))
-        return async_client.sync()
+        try:
+            async_client = asyncio.run(
+                MLDiagnosticsEnv.from_docker_image(LOCAL_IMAGE_NAME)
+            )
+            return async_client.sync()
+        except Exception:
+            # Fallback to URL mode when docker image startup is unavailable.
+            return MLDiagnosticsEnv(base_url=ENV_BASE_URL).sync()
 
     return MLDiagnosticsEnv(base_url=ENV_BASE_URL).sync()
 
@@ -244,6 +250,11 @@ def run_task(client: Any, task_id: int, seed: int) -> float:
 
         score = min(max(score, 0.0), 1.0)
         success = bool(score >= SUCCESS_SCORE_THRESHOLD)
+        return score
+    except Exception:
+        # Never propagate task-level exceptions to the top-level runner.
+        success = False
+        score = 0.0
         return score
     finally:
         if env is not None:

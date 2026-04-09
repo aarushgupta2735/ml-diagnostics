@@ -53,6 +53,7 @@ TASK_IDS = [1, 2, 3]
 MAX_STEPS = int(os.getenv("MAX_STEPS", "10"))
 SEED = int(os.getenv("SEED", "42"))
 SUCCESS_SCORE_THRESHOLD = float(os.getenv("SUCCESS_SCORE_THRESHOLD", "0.1"))
+STRICT_SCORE_EPS = float(os.getenv("STRICT_SCORE_EPS", "1e-6"))
 
 TASK_NAMES = {
     1: "hyperparameter-diagnosis",
@@ -103,8 +104,9 @@ def log_step(step: int, action: str, reward: float, done: bool, error: str | Non
 
 def log_end(success: bool, steps: int, score: float, rewards: List[float]) -> None:
     rewards_str = ",".join(f"{reward:.2f}" for reward in rewards)
+    bounded_score = min(max(score, STRICT_SCORE_EPS), 1.0 - STRICT_SCORE_EPS)
     print(
-        f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}",
+        f"[END] success={str(success).lower()} steps={steps} score={bounded_score:.6f} rewards={rewards_str}",
         flush=True,
     )
 
@@ -248,7 +250,7 @@ def run_task(client: Any, task_id: int, seed: int) -> float:
                 )
                 score = float(observation.score_so_far)
 
-        score = min(max(score, 0.0), 1.0)
+        score = min(max(score, STRICT_SCORE_EPS), 1.0 - STRICT_SCORE_EPS)
         success = bool(score >= SUCCESS_SCORE_THRESHOLD)
         return score
     except Exception:

@@ -6,6 +6,9 @@ from envs.ml_diagnostics.tasks.task2_overfitting import get_task2_scenario, grad
 from envs.ml_diagnostics.tasks.task3_multi_issue import get_task3_scenario, grade_task3
 
 
+STRICT_SCORE_EPS = 1e-6
+
+
 TASK_REGISTRY = {
     1: {
         "get_scenario": get_task1_scenario,
@@ -149,7 +152,9 @@ class MLDiagnosticsGrader:
         Called when episode ends (done=True).
         """
         grade_fn = self._registry["grade"]
-        self.total_score = grade_fn(self.scenario, self.actions)
+        raw_score = float(grade_fn(self.scenario, self.actions))
+        # Submission requires strict bounds, so never return exact 0 or 1.
+        self.total_score = min(max(raw_score, STRICT_SCORE_EPS), 1.0 - STRICT_SCORE_EPS)
         return self.total_score
 
     def _partial_diagnosis_score(self, payload: Dict[str, Any]) -> Dict[str, Any]:
